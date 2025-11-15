@@ -1,1 +1,122 @@
-import React, { useState } from 'react';\nimport { ThemeProvider, createTheme } from '@mui/material/styles';\nimport {\n  CssBaseline, Container, AppBar, Toolbar, Typography, Box,\n  Card, CardContent, Button, Alert, CircularProgress,\n  Chip, Grid, Paper, Divider\n} from '@mui/material';\nimport { CloudUpload, Analytics, LocalHospital } from '@mui/icons-material';\nimport ImageUpload from './components/ImageUpload';\nimport AnalysisResults from './components/AnalysisResults';\n\nconst theme = createTheme({\n  palette: {\n    primary: { main: '#2563eb' },\n    secondary: { main: '#7c3aed' },\n    success: { main: '#10b981' },\n    error: { main: '#ef4444' },\n  },\n});\n\nfunction App() {\n  const [analysisResult, setAnalysisResult] = useState(null);\n  const [loading, setLoading] = useState(false);\n\n  return (\n    <ThemeProvider theme={theme}>\n      <CssBaseline />\n      \n      <AppBar position=\"static\" sx={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>\n        <Toolbar>\n          <LocalHospital sx={{ mr: 2 }} />\n          <Typography variant=\"h6\" component=\"div\" sx={{ flexGrow: 1 }}>\n            AI Medical Image Analysis System\n          </Typography>\n          <Chip label=\"AI Powered\" color=\"secondary\" />\n        </Toolbar>\n      </AppBar>\n\n      <Container maxWidth=\"lg\" sx={{ mt: 4, mb: 4 }}>\n        {/* Hero Section */}\n        <Paper \n          elevation={0} \n          sx={{ \n            p: 4, \n            mb: 4, \n            background: 'linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%)',\n            textAlign: 'center'\n          }}\n        >\n          <Analytics sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />\n          <Typography variant=\"h4\" gutterBottom sx={{ fontWeight: 700 }}>\n            Upload Medical Images for Instant AI Analysis\n          </Typography>\n          <Typography variant=\"body1\" color=\"text.secondary\" sx={{ mb: 3 }}>\n            Support for MRI, CT Scan, and X-Ray images with advanced AI diagnostics\n          </Typography>\n          \n          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>\n            <Chip label=\"MRI Analysis\" color=\"primary\" variant=\"outlined\" />\n            <Chip label=\"CT Scan Detection\" color=\"primary\" variant=\"outlined\" />\n            <Chip label=\"X-Ray Diagnosis\" color=\"primary\" variant=\"outlined\" />\n            <Chip label=\"Instant Results\" color=\"success\" variant=\"outlined\" />\n          </Box>\n        </Paper>\n\n        <Grid container spacing={4}>\n          {/* Upload Section */}\n          <Grid item xs={12} md={6}>\n            <Card sx={{ height: '100%' }}>\n              <CardContent sx={{ p: 3 }}>\n                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>\n                  <CloudUpload sx={{ mr: 2, color: 'primary.main' }} />\n                  <Typography variant=\"h6\" sx={{ fontWeight: 600 }}>\n                    Upload Medical Image\n                  </Typography>\n                </Box>\n                \n                <ImageUpload \n                  onAnalysisComplete={setAnalysisResult}\n                  onLoadingChange={setLoading}\n                />\n                \n                <Alert severity=\"info\" sx={{ mt: 2 }}>\n                  <strong>Supported formats:</strong> JPEG, PNG, DICOM, TIFF<br/>\n                  <strong>Max size:</strong> 10MB\n                </Alert>\n              </CardContent>\n            </Card>\n          </Grid>\n\n          {/* Results Section */}\n          <Grid item xs={12} md={6}>\n            <Card sx={{ height: '100%' }}>\n              <CardContent sx={{ p: 3 }}>\n                <Typography variant=\"h6\" gutterBottom sx={{ fontWeight: 600 }}>\n                  Analysis Results\n                </Typography>\n                \n                {loading ? (\n                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 4 }}>\n                    <CircularProgress size={48} sx={{ mb: 2 }} />\n                    <Typography variant=\"body2\" color=\"text.secondary\">\n                      AI is analyzing your medical image...\n                    </Typography>\n                  </Box>\n                ) : analysisResult ? (\n                  <AnalysisResults result={analysisResult} />\n                ) : (\n                  <Box sx={{ textAlign: 'center', py: 4, color: 'text.secondary' }}>\n                    <Analytics sx={{ fontSize: 48, mb: 2, opacity: 0.5 }} />\n                    <Typography variant=\"body1\">\n                      Upload a medical image to see AI analysis results\n                    </Typography>\n                  </Box>\n                )}\n              </CardContent>\n            </Card>\n          </Grid>\n        </Grid>\n\n        {/* Features Section */}\n        <Paper elevation={1} sx={{ mt: 4, p: 3 }}>\n          <Typography variant=\"h6\" gutterBottom sx={{ fontWeight: 600, textAlign: 'center', mb: 3 }}>\n            AI-Powered Medical Analysis Features\n          </Typography>\n          \n          <Grid container spacing={3}>\n            <Grid item xs={12} md={4}>\n              <Box sx={{ textAlign: 'center' }}>\n                <Typography variant=\"h4\" color=\"primary.main\" sx={{ fontWeight: 700 }}>\n                  95%\n                </Typography>\n                <Typography variant=\"body2\" color=\"text.secondary\">\n                  Accuracy Rate\n                </Typography>\n              </Box>\n            </Grid>\n            <Grid item xs={12} md={4}>\n              <Box sx={{ textAlign: 'center' }}>\n                <Typography variant=\"h4\" color=\"success.main\" sx={{ fontWeight: 700 }}>\n                  2.3s\n                </Typography>\n                <Typography variant=\"body2\" color=\"text.secondary\">\n                  Average Analysis Time\n                </Typography>\n              </Box>\n            </Grid>\n            <Grid item xs={12} md={4}>\n              <Box sx={{ textAlign: 'center' }}>\n                <Typography variant=\"h4\" color=\"secondary.main\" sx={{ fontWeight: 700 }}>\n                  24/7\n                </Typography>\n                <Typography variant=\"body2\" color=\"text.secondary\">\n                  Available Service\n                </Typography>\n              </Box>\n            </Grid>\n          </Grid>\n        </Paper>\n      </Container>\n    </ThemeProvider>\n  );\n}\n\nexport default App;
+import React, { useState } from 'react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import {
+  CssBaseline, Container, AppBar, Toolbar, Typography, Box,
+  Card, CardContent, Alert, CircularProgress,
+  Chip, Grid, Paper
+} from '@mui/material';
+import { CloudUpload, Analytics, LocalHospital } from '@mui/icons-material';
+import ImageUpload from './components/ImageUpload';
+import AnalysisResults from './components/AnalysisResults';
+
+const theme = createTheme({
+  palette: {
+    primary: { main: '#2563eb' },
+    secondary: { main: '#7c3aed' },
+    success: { main: '#10b981' },
+    error: { main: '#ef4444' },
+  },
+});
+
+function App() {
+  const [analysisResult, setAnalysisResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      
+      <AppBar position="static" sx={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+        <Toolbar>
+          <LocalHospital sx={{ mr: 2 }} />
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            AI Medical Image Analysis System
+          </Typography>
+          <Chip label="AI Powered" color="secondary" />
+        </Toolbar>
+      </AppBar>
+
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Paper 
+          elevation={0} 
+          sx={{ 
+            p: 4, 
+            mb: 4, 
+            background: 'linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%)',
+            textAlign: 'center'
+          }}
+        >
+          <Analytics sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
+          <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>
+            Upload Medical Images for Instant AI Analysis
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+            Support for MRI, CT Scan, and X-Ray images with advanced AI diagnostics
+          </Typography>
+          
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
+            <Chip label="MRI Analysis" color="primary" variant="outlined" />
+            <Chip label="CT Scan Detection" color="primary" variant="outlined" />
+            <Chip label="X-Ray Diagnosis" color="primary" variant="outlined" />
+            <Chip label="Instant Results" color="success" variant="outlined" />
+          </Box>
+        </Paper>
+
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={6}>
+            <Card sx={{ height: '100%' }}>
+              <CardContent sx={{ p: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                  <CloudUpload sx={{ mr: 2, color: 'primary.main' }} />
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    Upload Medical Image
+                  </Typography>
+                </Box>
+                
+                <ImageUpload 
+                  onAnalysisComplete={setAnalysisResult}
+                  onLoadingChange={setLoading}
+                />
+                
+                <Alert severity="info" sx={{ mt: 2 }}>
+                  <strong>Supported formats:</strong> JPEG, PNG, DICOM, TIFF<br/>
+                  <strong>Max size:</strong> 10MB
+                </Alert>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <Card sx={{ height: '100%' }}>
+              <CardContent sx={{ p: 3 }}>
+                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+                  Analysis Results
+                </Typography>
+                
+                {loading ? (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 4 }}>
+                    <CircularProgress size={48} sx={{ mb: 2 }} />
+                    <Typography variant="body2" color="text.secondary">
+                      AI is analyzing your medical image...
+                    </Typography>
+                  </Box>
+                ) : analysisResult ? (
+                  <AnalysisResults result={analysisResult} />
+                ) : (
+                  <Box sx={{ textAlign: 'center', py: 4, color: 'text.secondary' }}>
+                    <Analytics sx={{ fontSize: 48, mb: 2, opacity: 0.5 }} />
+                    <Typography variant="body1">
+                      Upload a medical image to see AI analysis results
+                    </Typography>
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </Container>
+    </ThemeProvider>
+  );
+}
+
+export default App;
