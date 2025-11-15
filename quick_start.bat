@@ -1,1 +1,0 @@
-@echo off\necho Starting AI-EHR System...\ncd backend\nstart \"Backend\" python -m uvicorn main:app --reload --port 8000\necho Backend starting at http://localhost:8000\necho Frontend: cd frontend && npm start\npause
