@@ -1,5 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
+
+.blank-icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background: transparent; /* blank icon */
+    border-radius: 10px;     /* optional soft shape */
+}
+
+
+
+
 * {
   margin: 0;
   padding: 0;
