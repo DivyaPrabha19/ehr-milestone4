@@ -1,1 +1,181 @@
-import React, { useState, useRef } from 'react';\nimport {\n  Box, Button, Typography, Alert, LinearProgress,\n  Card, CardContent, IconButton\n} from '@mui/material';\nimport { CloudUpload, Delete, Image } from '@mui/icons-material';\nimport axios from 'axios';\n\nconst ImageUpload = ({ onAnalysisComplete, onLoadingChange }) => {\n  const [selectedFile, setSelectedFile] = useState(null);\n  const [preview, setPreview] = useState(null);\n  const [error, setError] = useState(null);\n  const fileInputRef = useRef(null);\n\n  const handleFileSelect = (event) => {\n    const file = event.target.files[0];\n    if (file) {\n      // Validate file type\n      if (!file.type.startsWith('image/')) {\n        setError('Please select a valid image file');\n        return;\n      }\n      \n      // Validate file size (10MB limit)\n      if (file.size > 10 * 1024 * 1024) {\n        setError('File size must be less than 10MB');\n        return;\n      }\n      \n      setSelectedFile(file);\n      setError(null);\n      \n      // Create preview\n      const reader = new FileReader();\n      reader.onload = (e) => setPreview(e.target.result);\n      reader.readAsDataURL(file);\n    }\n  };\n\n  const handleUpload = async () => {\n    if (!selectedFile) {\n      setError('Please select a file first');\n      return;\n    }\n\n    const formData = new FormData();\n    formData.append('file', selectedFile);\n\n    try {\n      onLoadingChange(true);\n      setError(null);\n      \n      const response = await axios.post('/analyze-image', formData, {\n        headers: {\n          'Content-Type': 'multipart/form-data',\n        },\n      });\n      \n      onAnalysisComplete(response.data);\n    } catch (error) {\n      console.error('Upload failed:', error);\n      setError(error.response?.data?.detail || 'Analysis failed. Please try again.');\n    } finally {\n      onLoadingChange(false);\n    }\n  };\n\n  const handleClear = () => {\n    setSelectedFile(null);\n    setPreview(null);\n    setError(null);\n    if (fileInputRef.current) {\n      fileInputRef.current.value = '';\n    }\n  };\n\n  return (\n    <Box>\n      {/* File Input */}\n      <input\n        type=\"file\"\n        ref={fileInputRef}\n        onChange={handleFileSelect}\n        accept=\"image/*\"\n        style={{ display: 'none' }}\n      />\n      \n      {/* Upload Area */}\n      {!preview ? (\n        <Card \n          sx={{ \n            border: '2px dashed #e0e0e0',\n            backgroundColor: '#fafafa',\n            cursor: 'pointer',\n            '&:hover': {\n              borderColor: 'primary.main',\n              backgroundColor: '#f5f5f5'\n            }\n          }}\n          onClick={() => fileInputRef.current?.click()}\n        >\n          <CardContent sx={{ textAlign: 'center', py: 4 }}>\n            <CloudUpload sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />\n            <Typography variant=\"h6\" gutterBottom>\n              Click to upload medical image\n            </Typography>\n            <Typography variant=\"body2\" color=\"text.secondary\">\n              Drag and drop or click to select MRI, CT, or X-Ray images\n            </Typography>\n          </CardContent>\n        </Card>\n      ) : (\n        <Card>\n          <CardContent>\n            <Box sx={{ position: 'relative' }}>\n              <img\n                src={preview}\n                alt=\"Preview\"\n                style={{\n                  width: '100%',\n                  maxHeight: '300px',\n                  objectFit: 'contain',\n                  borderRadius: '8px'\n                }}\n              />\n              <IconButton\n                onClick={handleClear}\n                sx={{\n                  position: 'absolute',\n                  top: 8,\n                  right: 8,\n                  backgroundColor: 'rgba(0,0,0,0.5)',\n                  color: 'white',\n                  '&:hover': {\n                    backgroundColor: 'rgba(0,0,0,0.7)'\n                  }\n                }}\n              >\n                <Delete />\n              </IconButton>\n            </Box>\n            \n            <Box sx={{ mt: 2 }}>\n              <Typography variant=\"body2\" color=\"text.secondary\">\n                <strong>File:</strong> {selectedFile?.name}\n              </Typography>\n              <Typography variant=\"body2\" color=\"text.secondary\">\n                <strong>Size:</strong> {(selectedFile?.size / 1024 / 1024).toFixed(2)} MB\n              </Typography>\n            </Box>\n          </CardContent>\n        </Card>\n      )}\n      \n      {/* Error Display */}\n      {error && (\n        <Alert severity=\"error\" sx={{ mt: 2 }}>\n          {error}\n        </Alert>\n      )}\n      \n      {/* Action Buttons */}\n      <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>\n        <Button\n          variant=\"contained\"\n          onClick={handleUpload}\n          disabled={!selectedFile}\n          startIcon={<Image />}\n          fullWidth\n        >\n          Analyze Image\n        </Button>\n        \n        {selectedFile && (\n          <Button\n            variant=\"outlined\"\n            onClick={handleClear}\n            startIcon={<Delete />}\n          >\n            Clear\n          </Button>\n        )}\n      </Box>\n    </Box>\n  );\n};\n\nexport default ImageUpload;
+import React, { useState, useRef } from 'react';
+import {
+  Box, Button, Typography, Alert,
+  Card, CardContent, IconButton
+} from '@mui/material';
+import { CloudUpload, Delete, Image } from '@mui/icons-material';
+import axios from 'axios';
+
+const ImageUpload = ({ onAnalysisComplete, onLoadingChange }) => {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [error, setError] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        setError('Please select a valid image file');
+        return;
+      }
+      
+      if (file.size > 10 * 1024 * 1024) {
+        setError('File size must be less than 10MB');
+        return;
+      }
+      
+      setSelectedFile(file);
+      setError(null);
+      
+      const reader = new FileReader();
+      reader.onload = (e) => setPreview(e.target.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      setError('Please select a file first');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+      onLoadingChange(true);
+      setError(null);
+      
+      const response = await axios.post('/analyze-image', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      onAnalysisComplete(response.data);
+    } catch (error) {
+      console.error('Upload failed:', error);
+      setError(error.response?.data?.detail || 'Analysis failed. Please try again.');
+    } finally {
+      onLoadingChange(false);
+    }
+  };
+
+  const handleClear = () => {
+    setSelectedFile(null);
+    setPreview(null);
+    setError(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  return (
+    <Box>
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileSelect}
+        accept="image/*"
+        style={{ display: 'none' }}
+      />
+      
+      {!preview ? (
+        <Card 
+          sx={{ 
+            border: '2px dashed #e0e0e0',
+            backgroundColor: '#fafafa',
+            cursor: 'pointer',
+            '&:hover': {
+              borderColor: 'primary.main',
+              backgroundColor: '#f5f5f5'
+            }
+          }}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <CardContent sx={{ textAlign: 'center', py: 4 }}>
+            <CloudUpload sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
+            <Typography variant="h6" gutterBottom>
+              Click to upload medical image
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Drag and drop or click to select MRI, CT, or X-Ray images
+            </Typography>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardContent>
+            <Box sx={{ position: 'relative' }}>
+              <img
+                src={preview}
+                alt="Preview"
+                style={{
+                  width: '100%',
+                  maxHeight: '300px',
+                  objectFit: 'contain',
+                  borderRadius: '8px'
+                }}
+              />
+              <IconButton
+                onClick={handleClear}
+                sx={{
+                  position: 'absolute',
+                  top: 8,
+                  right: 8,
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: 'rgba(0,0,0,0.7)'
+                  }
+                }}
+              >
+                <Delete />
+              </IconButton>
+            </Box>
+            
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="body2" color="text.secondary">
+                <strong>File:</strong> {selectedFile?.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                <strong>Size:</strong> {(selectedFile?.size / 1024 / 1024).toFixed(2)} MB
+              </Typography>
+            </Box>
+          </CardContent>
+        </Card>
+      )}
+      
+      {error && (
+        <Alert severity="error" sx={{ mt: 2 }}>
+          {error}
+        </Alert>
+      )}
+      
+      <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
+        <Button
+          variant="contained"
+          onClick={handleUpload}
+          disabled={!selectedFile}
+          startIcon={<Image />}
+          fullWidth
+        >
+          Analyze Image
+        </Button>
+        
+        {selectedFile && (
+          <Button
+            variant="outlined"
+            onClick={handleClear}
+            startIcon={<Delete />}
+          >
+            Clear
+          </Button>
+        )}
+      </Box>
+    </Box>
+  );
+};
+
+export default ImageUpload;
