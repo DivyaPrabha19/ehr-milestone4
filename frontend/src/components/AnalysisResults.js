@@ -1,1 +1,157 @@
-import React from 'react';\nimport {\n  Box, Typography, Chip, Alert, Card, CardContent,\n  LinearProgress, List, ListItem, ListItemText,\n  Divider, Grid\n} from '@mui/material';\nimport {\n  CheckCircle, Warning, Error, Info,\n  Schedule, Psychology, LocalHospital\n} from '@mui/icons-material';\n\nconst AnalysisResults = ({ result }) => {\n  if (!result) return null;\n\n  const { analysis, filename, timestamp } = result;\n  \n  const getSeverityColor = (severity) => {\n    switch (severity?.toLowerCase()) {\n      case 'high': return 'error';\n      case 'medium': return 'warning';\n      case 'low': return 'info';\n      case 'none': return 'success';\n      default: return 'default';\n    }\n  };\n\n  const getSeverityIcon = (severity) => {\n    switch (severity?.toLowerCase()) {\n      case 'high': return <Error />;\n      case 'medium': return <Warning />;\n      case 'low': return <Info />;\n      case 'none': return <CheckCircle />;\n      default: return <Info />;\n    }\n  };\n\n  return (\n    <Box>\n      {/* Analysis Header */}\n      <Alert \n        severity={getSeverityColor(analysis.severity)} \n        icon={getSeverityIcon(analysis.severity)}\n        sx={{ mb: 3 }}\n      >\n        <Typography variant=\"h6\" gutterBottom>\n          {analysis.diagnosis}\n        </Typography>\n        <Typography variant=\"body2\">\n          {analysis.description}\n        </Typography>\n      </Alert>\n\n      {/* Analysis Details */}\n      <Grid container spacing={2} sx={{ mb: 3 }}>\n        <Grid item xs={6}>\n          <Card variant=\"outlined\">\n            <CardContent sx={{ textAlign: 'center', py: 2 }}>\n              <Typography variant=\"h4\" color=\"primary.main\" sx={{ fontWeight: 700 }}>\n                {analysis.confidence}%\n              </Typography>\n              <Typography variant=\"body2\" color=\"text.secondary\">\n                Confidence\n              </Typography>\n            </CardContent>\n          </Card>\n        </Grid>\n        <Grid item xs={6}>\n          <Card variant=\"outlined\">\n            <CardContent sx={{ textAlign: 'center', py: 2 }}>\n              <Typography variant=\"h4\" color=\"success.main\" sx={{ fontWeight: 700 }}>\n                {analysis.analysis_time}\n              </Typography>\n              <Typography variant=\"body2\" color=\"text.secondary\">\n                Analysis Time\n              </Typography>\n            </CardContent>\n          </Card>\n        </Grid>\n      </Grid>\n\n      {/* Scan Information */}\n      <Card variant=\"outlined\" sx={{ mb: 3 }}>\n        <CardContent>\n          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>\n            <Psychology sx={{ mr: 1, color: 'primary.main' }} />\n            <Typography variant=\"h6\" sx={{ fontWeight: 600 }}>\n              Scan Information\n            </Typography>\n          </Box>\n          \n          <Grid container spacing={2}>\n            <Grid item xs={12} sm={6}>\n              <Typography variant=\"body2\" color=\"text.secondary\">Scan Type</Typography>\n              <Chip \n                label={analysis.scan_type} \n                color=\"primary\" \n                size=\"small\" \n                sx={{ mt: 0.5 }}\n              />\n            </Grid>\n            <Grid item xs={12} sm={6}>\n              <Typography variant=\"body2\" color=\"text.secondary\">Severity Level</Typography>\n              <Chip \n                label={analysis.severity} \n                color={getSeverityColor(analysis.severity)} \n                size=\"small\" \n                sx={{ mt: 0.5 }}\n              />\n            </Grid>\n          </Grid>\n        </CardContent>\n      </Card>\n\n      {/* Confidence Score */}\n      <Card variant=\"outlined\" sx={{ mb: 3 }}>\n        <CardContent>\n          <Typography variant=\"subtitle2\" gutterBottom>\n            AI Confidence Score\n          </Typography>\n          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>\n            <LinearProgress \n              variant=\"determinate\" \n              value={analysis.confidence} \n              color={analysis.confidence > 80 ? 'success' : analysis.confidence > 60 ? 'warning' : 'error'}\n              sx={{ flexGrow: 1, height: 8, borderRadius: 4 }}\n            />\n            <Typography variant=\"body2\" sx={{ fontWeight: 600 }}>\n              {analysis.confidence}%\n            </Typography>\n          </Box>\n        </CardContent>\n      </Card>\n\n      {/* Recommendations */}\n      {analysis.recommendations && analysis.recommendations.length > 0 && (\n        <Card variant=\"outlined\" sx={{ mb: 3 }}>\n          <CardContent>\n            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>\n              <LocalHospital sx={{ mr: 1, color: 'secondary.main' }} />\n              <Typography variant=\"h6\" sx={{ fontWeight: 600 }}>\n                Medical Recommendations\n              </Typography>\n            </Box>\n            \n            <List dense>\n              {analysis.recommendations.map((recommendation, index) => (\n                <React.Fragment key={index}>\n                  <ListItem sx={{ px: 0 }}>\n                    <ListItemText \n                      primary={recommendation}\n                      primaryTypographyProps={{ variant: 'body2' }}\n                    />\n                  </ListItem>\n                  {index < analysis.recommendations.length - 1 && <Divider />}\n                </React.Fragment>\n              ))}\n            </List>\n          </CardContent>\n        </Card>\n      )}\n\n      {/* File Information */}\n      <Card variant=\"outlined\">\n        <CardContent>\n          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>\n            <Schedule sx={{ mr: 1, color: 'text.secondary' }} />\n            <Typography variant=\"subtitle2\">\n              Analysis Details\n            </Typography>\n          </Box>\n          \n          <Typography variant=\"body2\" color=\"text.secondary\">\n            <strong>File:</strong> {filename}\n          </Typography>\n          <Typography variant=\"body2\" color=\"text.secondary\">\n            <strong>Analyzed:</strong> {timestamp}\n          </Typography>\n          <Typography variant=\"body2\" color=\"text.secondary\">\n            <strong>Model:</strong> AI Medical Analysis v2.1\n          </Typography>\n        </CardContent>\n      </Card>\n\n      {/* Disclaimer */}\n      <Alert severity=\"warning\" sx={{ mt: 3 }}>\n        <Typography variant=\"body2\">\n          <strong>Medical Disclaimer:</strong> This AI analysis is for informational purposes only. \n          Always consult with qualified healthcare professionals for medical diagnosis and treatment decisions.\n        </Typography>\n      </Alert>\n    </Box>\n  );\n};\n\nexport default AnalysisResults;
+import React from 'react';
+import {
+  Box, Typography, Chip, Alert, Card, CardContent,
+  LinearProgress, List, ListItem, ListItemText,
+  Grid
+} from '@mui/material';
+import {
+  CheckCircle, Warning, Error, Info
+} from '@mui/icons-material';
+
+const AnalysisResults = ({ result }) => {
+  if (!result) return null;
+
+  const { analysis } = result;
+  
+  const getSeverityColor = (severity) => {
+    switch (severity?.toLowerCase()) {
+      case 'high': return 'error';
+      case 'medium': return 'warning';
+      case 'low': return 'info';
+      case 'none': return 'success';
+      default: return 'default';
+    }
+  };
+
+  const getSeverityIcon = (severity) => {
+    switch (severity?.toLowerCase()) {
+      case 'high': return <Error />;
+      case 'medium': return <Warning />;
+      case 'low': return <Info />;
+      case 'none': return <CheckCircle />;
+      default: return <Info />;
+    }
+  };
+
+  return (
+    <Box>
+      <Alert 
+        severity={getSeverityColor(analysis.severity)} 
+        icon={getSeverityIcon(analysis.severity)}
+        sx={{ mb: 3 }}
+      >
+        <Typography variant="h6" gutterBottom>
+          {analysis.diagnosis}
+        </Typography>
+        <Typography variant="body2">
+          {analysis.description}
+        </Typography>
+      </Alert>
+
+      <Grid container spacing={2} sx={{ mb: 3 }}>
+        <Grid item xs={6}>
+          <Card variant="outlined">
+            <CardContent sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="h4" color="primary.main" sx={{ fontWeight: 700 }}>
+                {analysis.confidence}%
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Confidence
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={6}>
+          <Card variant="outlined">
+            <CardContent sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="h4" color="success.main" sx={{ fontWeight: 700 }}>
+                {analysis.analysis_time}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Analysis Time
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      <Card variant="outlined" sx={{ mb: 3 }}>
+        <CardContent>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+            Scan Information
+          </Typography>
+          
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body2" color="text.secondary">Scan Type</Typography>
+              <Chip 
+                label={analysis.scan_type} 
+                color="primary" 
+                size="small" 
+                sx={{ mt: 0.5 }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body2" color="text.secondary">Severity Level</Typography>
+              <Chip 
+                label={analysis.severity} 
+                color={getSeverityColor(analysis.severity)} 
+                size="small" 
+                sx={{ mt: 0.5 }}
+              />
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+
+      <Card variant="outlined" sx={{ mb: 3 }}>
+        <CardContent>
+          <Typography variant="subtitle2" gutterBottom>
+            AI Confidence Score
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <LinearProgress 
+              variant="determinate" 
+              value={analysis.confidence} 
+              color={analysis.confidence > 80 ? 'success' : analysis.confidence > 60 ? 'warning' : 'error'}
+              sx={{ flexGrow: 1, height: 8, borderRadius: 4 }}
+            />
+            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+              {analysis.confidence}%
+            </Typography>
+          </Box>
+        </CardContent>
+      </Card>
+
+      {analysis.recommendations && analysis.recommendations.length > 0 && (
+        <Card variant="outlined" sx={{ mb: 3 }}>
+          <CardContent>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+              Medical Recommendations
+            </Typography>
+            
+            <List dense>
+              {analysis.recommendations.map((recommendation, index) => (
+                <ListItem key={index} sx={{ px: 0 }}>
+                  <ListItemText 
+                    primary={recommendation}
+                    primaryTypographyProps={{ variant: 'body2' }}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </CardContent>
+        </Card>
+      )}
+
+      <Alert severity="warning" sx={{ mt: 3 }}>
+        <Typography variant="body2">
+          <strong>Medical Disclaimer:</strong> This AI analysis is for informational purposes only. 
+          Always consult with qualified healthcare professionals for medical diagnosis and treatment decisions.
+        </Typography>
+      </Alert>
+    </Box>
+  );
+};
+
+export default AnalysisResults;
