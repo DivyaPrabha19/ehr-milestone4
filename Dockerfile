@@ -20,20 +20,7 @@ COPY Brain_Tumor_EHR_Clean_1000.xlsx ./
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
 
-# Copy and build frontend
-COPY frontend/package.json frontend/package-lock.json ./frontend/
-WORKDIR /app/frontend
-RUN npm install
-
-COPY frontend/ ./
-RUN npm run build
-
-# Move built frontend to backend static files
-WORKDIR /app
-RUN mkdir -p static && cp -r frontend/build/* static/
-
-# Update main.py to serve static files
-RUN echo 'app.mount("/", StaticFiles(directory="static", html=True), name="static")' >> main.py
+# Skip frontend build for now - deploy backend only
 
 EXPOSE $PORT
 
