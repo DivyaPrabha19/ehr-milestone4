@@ -1,9 +1,9 @@
 # 🧠 AI-Powered Enhanced EHR Imaging & Documentation System
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR_USERNAME/ai-ehr-system)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/YOUR_USERNAME/ai-ehr-system)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![React 18](https://img.shields.io/badge/react-18.0+-61dafb.svg)](https://reactjs.org/)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen.svg)](https://bucolic-crepe-c6e495.netlify.app)
 
 A comprehensive Electronic Health Record system with AI-powered medical image analysis and documentation capabilities for brain tumor detection and medical text summarization.
 
@@ -14,12 +14,12 @@ A comprehensive Electronic Health Record system with AI-powered medical image an
 - 👥 **Patient Management** - Search and view patient records
 - 🎯 **Real-time Analysis** - Instant medical image processing
 - 📱 **Responsive Design** - Modern UI with Material Design
-- 🚀 **Serverless Deployment** - Ready for Vercel/Netlify
+- 🚀 **Static Deployment** - Ready for Netlify hosting
 
 ## 🚀 Quick Start
 
 ### Option 1: One-Click Deploy
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR_USERNAME/ai-ehr-system)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/YOUR_USERNAME/ai-ehr-system)
 
 ### Option 2: Local Development
 
@@ -59,7 +59,7 @@ Access at: http://localhost:3000
 | **Backend** | FastAPI, Python 3.9+ |
 | **AI/ML** | Transformers, PIL, Medical NLP |
 | **Database** | MySQL (local), Mock data (production) |
-| **Deployment** | Vercel, Docker |
+| **Deployment** | Netlify, Static Hosting |
 
 ## 📊 API Endpoints
 
@@ -105,24 +105,20 @@ ai-ehr-system/
 
 ## 🚀 Deployment Options
 
-### Vercel (Recommended)
+### Netlify (Recommended)
 ```bash
-# Connect GitHub repo to Vercel
+# Connect GitHub repo to Netlify
 # Auto-deploys on push to main branch
+# Static site hosting with global CDN
 ```
 
-### Docker
-```bash
-docker-compose up --build
-```
-
-### Local
+### Local Development
 ```bash
 # Backend
 uvicorn backend.main:app --reload
 
 # Frontend
-cd frontend && npm start
+Open index.html in browser
 ```
 
 ## 🔧 Configuration
@@ -134,11 +130,11 @@ DATABASE_URL=mysql://user:pass@host:port/db
 HUGGINGFACE_API_KEY=your_key_here
 ```
 
-### Vercel Setup
+### Netlify Setup
 1. Fork this repository
-2. Connect to Vercel
+2. Connect to Netlify
 3. Deploy automatically
-4. Access at `https://your-app.vercel.app`
+4. Access at `https://your-app.netlify.app`
 
 ## 📸 Screenshots
 
@@ -163,16 +159,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🆘 Support
 
-- 📧 **Email**: nsdivyaprabha19@gmail.com
+- 📧 **Email**: your-email@example.com
 - 💬 **Issues**: [GitHub Issues](https://github.com/YOUR_USERNAME/ai-ehr-system/issues)
-- 📖 **Docs**: [Documentation](https://your-app.vercel.app/docs)
+- 📖 **Docs**: [Documentation](https://bucolic-crepe-c6e495.netlify.app)
+- 🌐 **Live Demo**: [https://bucolic-crepe-c6e495.netlify.app](https://bucolic-crepe-c6e495.netlify.app)
 
 ## 🙏 Acknowledgments
 
 - Hugging Face for medical NLP models
 - Material-UI for React components
 - FastAPI for high-performance backend
-- Vercel for seamless deployment
+- Netlify for seamless static deployment
 
 ---
 
