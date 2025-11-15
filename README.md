@@ -1,20 +1,20 @@
-# 🧠 AI-Powered Enhanced EHR Imaging & Documentation System
+# 🏥 AI Enhanced EHR Imaging & Documentation System
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/YOUR_USERNAME/ai-ehr-system)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/DivyaPrabha19/ehr-milestone4)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen.svg)](https://bucolic-crepe-c6e495.netlify.app)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen.svg)](https://ai-enhanced-ehr-imaging-system.netlify.app)
 
-A comprehensive Electronic Health Record system with AI-powered medical image analysis and documentation capabilities for brain tumor detection and medical text summarization.
+A comprehensive Electronic Health Record system with AI-powered medical image analysis and documentation capabilities for accurate medical diagnosis and automated clinical documentation.
 
 ## ✨ Features
 
-- 🔍 **AI Medical Image Analysis** - Brain tumor detection (MRI, CT, X-RAY)
-- 📝 **Medical Text Summarization** - AI-powered clinical documentation
-- 👥 **Patient Management** - Search and view patient records
-- 🎯 **Real-time Analysis** - Instant medical image processing
-- 📱 **Responsive Design** - Modern UI with Material Design
-- 🚀 **Static Deployment** - Ready for Netlify hosting
+- 🔍 **EHR Imaging Analysis** - AI-enhanced medical imaging with accurate diagnosis
+- 📊 **EHR Documentation** - Comprehensive patient record management with database integration
+- 📝 **AI Documentation** - Automated clinical documentation and medical coding
+- 🎯 **Real-time Analysis** - Instant medical image processing with professional recommendations
+- 🎨 **Multi-Theme UI** - Colorful professional interface with different fonts
+- 🗄️ **Database Integration** - MySQL connectivity with fallback to mock data
 
 ## 🚀 Quick Start
 
@@ -25,29 +25,31 @@ A comprehensive Electronic Health Record system with AI-powered medical image an
 
 ```bash
 # Clone repository
-git clone https://github.com/YOUR_USERNAME/ai-ehr-system.git
-cd ai-ehr-system
+git clone https://github.com/DivyaPrabha19/ehr-milestone4.git
+cd ehr-milestone4
+
+# Install dependencies
+pip install -r backend/requirements.txt
 
 # Run backend
-python -m uvicorn backend.main:app --reload --port 8000
+cd backend
+python main.py
 
-# Run frontend (new terminal)
-cd frontend
-npm install
-npm start
+# Open frontend
+# Simply open index.html in your browser
 ```
 
-Access at: http://localhost:3000
+Access at: http://localhost:8000 (backend) and open index.html (frontend)
 
 ## 🏗️ Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   React Frontend│    │  FastAPI Backend│    │   AI Models     │
+│  HTML Frontend  │    │  FastAPI Backend│    │   MySQL Database│
 │                 │    │                 │    │                 │
-│ • Patient Search│◄──►│ • Image Analysis│◄──►│ • Medical NLP   │
-│ • Image Upload  │    │ • Text Summary  │    │ • Image AI      │
-│ • Results View  │    │ • Patient API   │    │ • Diagnostics   │
+│ • EHR Interface │◄──►│ • Image Analysis│◄──►│ • Patient Data  │
+│ • Multi-Theme UI│    │ • AI Documentation│    │ • Medical Records│
+│ • File Upload   │    │ • Database API  │    │ • Mock Fallback │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
@@ -55,11 +57,11 @@ Access at: http://localhost:3000
 
 | Component | Technology |
 |-----------|------------|
-| **Frontend** | React 18, Material-UI, Axios |
-| **Backend** | FastAPI, Python 3.9+ |
-| **AI/ML** | Transformers, PIL, Medical NLP |
-| **Database** | MySQL (local), Mock data (production) |
-| **Deployment** | Netlify, Static Hosting |
+| **Frontend** | HTML5, CSS3, JavaScript, Multi-Theme Design |
+| **Backend** | FastAPI, Python 3.9+, MySQL Connector |
+| **AI/ML** | Medical Image Analysis, Clinical Documentation |
+| **Database** | MySQL (brain_tumor_ehr), Mock Data Fallback |
+| **Deployment** | Netlify Static Hosting, GitHub Integration |
 
 ## 📊 API Endpoints
 
@@ -88,19 +90,16 @@ Access at: http://localhost:3000
 ## 📁 Project Structure
 
 ```
-ai-ehr-system/
-├── 📁 api/                 # Serverless API functions
-│   ├── main.py            # FastAPI backend
-│   └── requirements.txt   # Python dependencies
-├── 📁 frontend/           # React application
-│   ├── src/
-│   ├── public/
-│   └── package.json
-├── 📁 backend/            # Local development backend
-├── 📁 images/             # Sample medical images
-├── 📄 vercel.json         # Deployment config
-├── 📄 docker-compose.yml  # Container setup
-└── 📄 README.md           # This file
+ehr-milestone4/
+├── 📄 index.html              # Home page (Colorful theme, Roboto font)
+├── 📄 medical-app.html        # EHR Imaging Analysis (Pink theme, Poppins font)
+├── 📄 patient-records.html    # EHR Documentation (Green theme, Montserrat font)
+├── 📄 medical-summary.html    # AI Documentation (Purple theme, Open Sans font)
+├── 📁 backend/                # FastAPI backend
+│   ├── main.py               # API with MySQL integration
+│   └── requirements.txt      # Python dependencies
+├── 📄 README.md              # This file
+└── 📄 requirements.txt       # Root dependencies
 ```
 
 ## 🚀 Deployment Options
@@ -134,7 +133,7 @@ HUGGINGFACE_API_KEY=your_key_here
 1. Fork this repository
 2. Connect to Netlify
 3. Deploy automatically
-4. Access at `https://your-app.netlify.app`
+4. Access at `https://ai-enhanced-ehr-imaging-system.netlify.app`
 
 ## 📸 Screenshots
 
@@ -159,16 +158,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🆘 Support
 
-- 📧 **Email**: your-email@example.com
-- 💬 **Issues**: [GitHub Issues](https://github.com/YOUR_USERNAME/ai-ehr-system/issues)
-- 📖 **Docs**: [Documentation](https://bucolic-crepe-c6e495.netlify.app)
-- 🌐 **Live Demo**: [https://bucolic-crepe-c6e495.netlify.app](https://bucolic-crepe-c6e495.netlify.app)
+- 📧 **Email**: nsdivyaprabha19@gmail.com
+- 💬 **Issues**: [GitHub Issues](https://github.com/DivyaPrabha19/ehr-milestone4/issues)
+- 📖 **Docs**: [Documentation](https://ai-enhanced-ehr-imaging-system.netlify.app)
+- 🌐 **Live Demo**: [https://ai-enhanced-ehr-imaging-system.netlify.app](https://ai-enhanced-ehr-imaging-system.netlify.app)
 
 ## 🙏 Acknowledgments
 
-- Hugging Face for medical NLP models
-- Material-UI for React components
-- FastAPI for high-performance backend
+- FastAPI for high-performance backend API
+- MySQL for robust database management
+- Google Fonts for professional typography
 - Netlify for seamless static deployment
 
 ---
