@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏥 EHR Imaging Analysis - AI Enhanced System</title>
+    <title>🧠 AI Medical Imaging | Brain Tumor Detection System</title>
     <style>
         * {
             margin: 0;
@@ -61,8 +61,11 @@
         }
         
         .upload-section:hover {
-            border-color: rgba(255, 255, 255, 0.5);
-            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
         }
         
         .upload-section.dragover {
@@ -105,32 +108,37 @@
         }
         
         .upload-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(240, 147, 251, 0.4);
-            background: linear-gradient(135deg, #f5576c, #f093fb);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(240, 147, 251, 0.6);
+            background: linear-gradient(135deg, #ff6b9d, #f093fb, #667eea);
         }
         
         .header:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
         }
         
         .diagnosis-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 25px 50px rgba(240, 147, 251, 0.3);
+            background: linear-gradient(135deg, rgba(240, 147, 251, 0.4), rgba(245, 87, 108, 0.4));
+            transition: all 0.4s ease;
         }
         
         .recommendations:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
         }
         
         .recommendations li:hover {
-            color: white;
-            padding-left: 10px;
+            color: #f093fb;
+            padding-left: 15px;
+            transform: translateX(5px);
+            font-weight: 500;
             transition: all 0.3s ease;
         }
         
@@ -299,8 +307,8 @@
     <div class="container">
         <div class="header">
             <a href="index.html" style="float: left; color: #667eea; text-decoration: none; font-size: 1.2rem;">← Back to Home</a>
-            <h1>🏥 EHR Imaging Analysis</h1>
-            <p>AI-enhanced medical imaging integrated with electronic health records</p>
+            <h1>🧠 AI Medical Imaging</h1>
+            <p>Advanced brain tumor detection with 94% accuracy using deep learning models</p>
         </div>
         
         <div class="upload-section" id="uploadSection">
