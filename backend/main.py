@@ -6,6 +6,8 @@ import base64
 from typing import Optional
 from pydantic import BaseModel
 import random
+import mysql.connector
+from mysql.connector import Error
 
 app = FastAPI(title="AI Enhanced EHR Imaging & Documentation System")
 
@@ -16,6 +18,43 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Database configuration
+DB_CONFIG = {
+    'host': 'localhost',
+    'database': 'brain_tumor_ehr',
+    'user': 'root',
+    'password': 'divya1936'
+}
+
+def get_db_connection():
+    """Create database connection"""
+    try:
+        connection = mysql.connector.connect(**DB_CONFIG)
+        return connection
+    except Error as e:
+        print(f"Database connection error: {e}")
+        return None
+
+def get_patient_from_db(patient_id: str):
+    """Fetch patient data from database"""
+    connection = get_db_connection()
+    if not connection:
+        return None
+    
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = "SELECT * FROM patients WHERE patient_id = %s"
+        cursor.execute(query, (patient_id,))
+        patient = cursor.fetchone()
+        return patient
+    except Error as e:
+        print(f"Database query error: {e}")
+        return None
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
 
 class SummaryRequest(BaseModel):
     text: str
@@ -145,15 +184,33 @@ async def generate_medical_summary(request: SummaryRequest):
 
 @app.get("/patient/{patient_id}")
 async def get_patient_details(patient_id: str):
-    """Get patient details"""
+    """Get patient details from database"""
+    patient = get_patient_from_db(patient_id)
     
-    mock_patients = {
-        'P0001': {'patient_id': 'P0001', 'name': 'John Smith', 'age': 45, 'gender': 'Male', 'diagnosis': 'Glioma', 'scan_type': 'MRI'},
-        'P0002': {'patient_id': 'P0002', 'name': 'Sarah Johnson', 'age': 32, 'gender': 'Female', 'diagnosis': 'Normal', 'scan_type': 'CT'},
-        'P0003': {'patient_id': 'P0003', 'name': 'Michael Brown', 'age': 67, 'gender': 'Male', 'diagnosis': 'Meningioma', 'scan_type': 'MRI'}
-    }
-    
-    if patient_id in mock_patients:
-        return {"success": True, "patient": mock_patients[patient_id]}
+    if patient:
+        return {
+            "success": True,
+            "patient": {
+                "patient_id": patient['patient_id'],
+                "name": patient['name'],
+                "age": patient['age'],
+                "gender": patient['gender'],
+                "medical_history": patient['medical_history'],
+                "diagnosis": patient['diagnosis'],
+                "scan_type": patient['scan_type'],
+                "image_path": patient.get('image_path', '')
+            },
+            "source": "database"
+        }
     else:
-        raise HTTPException(status_code=404, detail="Patient not found")
+        # Mock data fallback
+        mock_patients = {
+            'P0001': {'patient_id': 'P0001', 'name': 'John Smith', 'age': 45, 'gender': 'Male', 'medical_history': 'Hypertension, Type 2 Diabetes', 'diagnosis': 'Glioma', 'scan_type': 'MRI'},
+            'P0002': {'patient_id': 'P0002', 'name': 'Sarah Johnson', 'age': 32, 'gender': 'Female', 'medical_history': 'Asthma, Allergic rhinitis', 'diagnosis': 'Normal', 'scan_type': 'CT'},
+            'P0003': {'patient_id': 'P0003', 'name': 'Michael Brown', 'age': 67, 'gender': 'Male', 'medical_history': 'Chronic kidney disease', 'diagnosis': 'Meningioma', 'scan_type': 'MRI'}
+        }
+        
+        if patient_id in mock_patients:
+            return {"success": True, "patient": mock_patients[patient_id], "source": "mock"}
+        else:
+            raise HTTPException(status_code=404, detail="Patient not found")
