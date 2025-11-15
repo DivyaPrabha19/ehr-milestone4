@@ -21,10 +21,18 @@ app.add_middleware(
 
 app.mount("/images", StaticFiles(directory="../images"), name="images")
 
-# Initialize medical summarization model
-tokenizer = AutoTokenizer.from_pretrained("Falconsai/medical_summarization")
-model = AutoModelForSeq2SeqLM.from_pretrained("Falconsai/medical_summarization")
-summarizer = pipeline("summarization", model=model, tokenizer=tokenizer)
+# Initialize medical summarization model (lazy loading)
+summarizer = None
+
+def get_summarizer():
+    global summarizer
+    if summarizer is None:
+        print("Loading AI model...")
+        tokenizer = AutoTokenizer.from_pretrained("Falconsai/medical_summarization")
+        model = AutoModelForSeq2SeqLM.from_pretrained("Falconsai/medical_summarization")
+        summarizer = pipeline("summarization", model=model, tokenizer=tokenizer)
+        print("AI model loaded!")
+    return summarizer
 
 DB_CONFIG = {
     "host": os.getenv("DB_HOST", "localhost"),
@@ -42,9 +50,10 @@ def get_db_connection():
     except mysql.connector.Error as e:
         raise HTTPException(status_code=500, detail=f"Database connection failed: {str(e)}")
 
-@app.on_event("startup")
-async def startup_event():
-    await load_excel_to_mysql()
+# Remove startup event for faster loading
+# @app.on_event("startup")
+# async def startup_event():
+#     await load_excel_to_mysql()
 
 async def load_excel_to_mysql():
     try:
@@ -97,7 +106,8 @@ async def root():
 @app.post("/generate-summary")
 async def generate_medical_summary(request: SummaryRequest):
     try:
-        summary = summarizer(request.text, max_length=150, min_length=50, do_sample=False)
+        model = get_summarizer()
+        summary = model(request.text, max_length=150, min_length=50, do_sample=False)
         return {"summary": summary[0]['summary_text']}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Summary generation failed: {str(e)}")
@@ -119,13 +129,14 @@ async def get_patient(patient_id: str):
             raise HTTPException(status_code=404, detail="Patient not found")
         
         medical_text = f"Patient: {patient['name']}, Age: {patient['age']}, Gender: {patient['gender']}. Medical History: {patient['medical_history']}. Diagnosis: {patient['diagnosis']}"
-        summary = summarizer(medical_text, max_length=100, min_length=30, do_sample=False)
+        model = get_summarizer()
+        summary = model(medical_text, max_length=100, min_length=30, do_sample=False)
         patient['medical_summary'] = summary[0]['summary_text']
         
         image_dir = Path(f"../images/{patient['diagnosis'].lower()}")
         if image_dir.exists():
             images = [f"/images/{patient['diagnosis'].lower()}/{img.name}" 
-                     for img in image_dir.glob("*.jpg")][:3]
+                    for img in image_dir.glob("*.jpg")][:3]
             patient['scan_images'] = images
         else:
             patient['scan_images'] = []
