@@ -109,7 +109,11 @@ def get_recommendations(condition: str, severity: str) -> list:
 
 @app.get("/")
 async def root():
-    return {"message": "AI Medical Image Analysis System - Upload medical images for instant diagnosis"}
+    return {"status": "healthy", "message": "AI Medical Image Analysis System"}
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
 
 @app.post("/analyze-image")
 async def analyze_image(file: UploadFile = File(...)):
