@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 import os
 import base64
 from typing import Optional
@@ -109,11 +110,17 @@ def get_recommendations(condition: str, severity: str) -> list:
 
 @app.get("/")
 async def root():
-    return {"status": "healthy", "message": "AI Medical Image Analysis System"}
+    return JSONResponse(
+        content={"status": "healthy", "message": "AI Medical Image Analysis System"},
+        media_type="application/json"
+    )
 
 @app.get("/health")
 async def health():
-    return {"status": "ok"}
+    return JSONResponse(
+        content={"status": "ok"},
+        media_type="application/json"
+    )
 
 @app.post("/analyze-image")
 async def analyze_image(file: UploadFile = File(...)):
