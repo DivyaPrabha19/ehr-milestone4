@@ -1,0 +1,14 @@
+{
+  "name": "ai-ehr-system",
+  "version": "1.0.0",
+  "description": "AI-Powered Enhanced EHR Imaging & Documentation System",
+  "main": "index.html",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "start": "cd frontend && npm start",
+    "dev": "cd frontend && npm start"
+  },
+  "keywords": ["medical", "ai", "ehr", "imaging", "healthcare"],
+  "author": "Your Name",
+  "license": "MIT"
+}

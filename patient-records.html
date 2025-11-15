@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 EHR Documentation - AI Enhanced System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #43cea2 0%, #185a9d 50%, #00b4db 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+        
+        .search-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .search-section h3 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .search-section h3::before {
+            content: '🔍 ';
+        }
+        
+        .search-input {
+            width: 100%;
+            max-width: 500px;
+            padding: 18px 25px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            text-align: center;
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .search-btn {
+            background: linear-gradient(135deg, #43cea2, #185a9d);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(67, 206, 162, 0.3);
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(67, 206, 162, 0.4);
+        }
+        
+        .patient-card {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+        
+        .patient-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .patient-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #43cea2, #185a9d);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            margin-right: 25px;
+            box-shadow: 0 10px 30px rgba(67, 206, 162, 0.3);
+        }
+        
+        .patient-info h2 {
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .patient-info p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .detail-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .detail-value {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.05rem;
+        }
+        
+        .medical-history {
+            background: rgba(67, 206, 162, 0.15);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid #43cea2;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(67, 206, 162, 0.3);
+        }
+        
+        .medical-history h4 {
+            color: white;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .medical-history h4::before {
+            content: '📋 ';
+        }
+        
+        .medical-history p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+        
+        .diagnosis-section {
+            background: rgba(0, 180, 219, 0.15);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid #00b4db;
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 180, 219, 0.3);
+        }
+        
+        .diagnosis-section h4 {
+            color: white;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .diagnosis-section h4::before {
+            content: '🩺 ';
+        }
+        
+        .diagnosis-section p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+        
+        .loading {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 50px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .loading p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            display: none;
+            background: rgba(24, 90, 157, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 25px;
+            border: 1px solid rgba(24, 90, 157, 0.3);
+            border-left: 4px solid #185a9d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="index.html" style="float: left; color: #667eea; text-decoration: none; font-size: 1.2rem;">← Back to Home</a>
+            <h1>📊 EHR Documentation</h1>
+            <p>Comprehensive electronic health records management and documentation</p>
+        </div>
+        
+        <div class="search-section">
+            <h3>Search Patient</h3>
+            <input type="text" id="patientIdInput" class="search-input" placeholder="Enter Patient ID (e.g., P0001, P0002, P0003...)">
+            <br>
+            <button class="search-btn" onclick="searchPatient()">Search Patient</button>
+        </div>
+        
+        <div class="loading" id="loadingSection">
+            <div class="spinner"></div>
+            <p>Searching patient records...</p>
+        </div>
+        
+        <div class="patient-card" id="patientCard">
+            <div class="patient-header">
+                <div class="patient-avatar" id="patientAvatar">👤</div>
+                <div class="patient-info">
+                    <h2 id="patientName">Patient Name</h2>
+                    <p>Patient ID: <span id="patientId">P001</span></p>
+                </div>
+            </div>
+            
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Age</div>
+                    <div class="detail-value" id="patientAge">--</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Gender</div>
+                    <div class="detail-value" id="patientGender">--</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Scan Type</div>
+                    <div class="detail-value" id="scanType">--</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Last Visit</div>
+                    <div class="detail-value" id="lastVisit">--</div>
+                </div>
+            </div>
+            
+            <div class="medical-history">
+                <h4>Medical History</h4>
+                <p id="medicalHistory">No medical history available</p>
+            </div>
+            
+            <div class="diagnosis-section">
+                <h4>Current Diagnosis</h4>
+                <p id="currentDiagnosis">No diagnosis available</p>
+            </div>
+        </div>
+        
+        <div class="error-message" id="errorMessage">
+            Patient not found. Please check the Patient ID and try again.
+        </div>
+    </div>
+
+    <script>
+        // Mock patient data (simulating database)
+        const mockPatients = {
+            'P0001': {
+                name: 'John Smith',
+                age: 45,
+                gender: 'Male',
+                medical_history: 'Hypertension, Type 2 Diabetes, Previous heart surgery in 2019',
+                diagnosis: 'Glioma - High-grade brain tumor requiring immediate surgical intervention',
+                scan_type: 'MRI',
+                last_visit: '2024-01-15'
+            },
+            'P0002': {
+                name: 'Sarah Johnson',
+                age: 32,
+                gender: 'Female',
+                medical_history: 'Asthma, Allergic rhinitis, No previous surgeries',
+                diagnosis: 'Normal brain scan - No abnormalities detected',
+                scan_type: 'CT',
+                last_visit: '2024-01-12'
+            },
+            'P0003': {
+                name: 'Michael Brown',
+                age: 67,
+                gender: 'Male',
+                medical_history: 'Chronic kidney disease, Osteoarthritis, Previous stroke in 2020',
+                diagnosis: 'Meningioma - Benign brain tumor, monitoring recommended',
+                scan_type: 'MRI',
+                last_visit: '2024-01-10'
+            }
+        };
+
+        async function searchPatient() {
+            const patientId = document.getElementById('patientIdInput').value.trim().toUpperCase();
+            
+            if (!patientId) {
+                alert('Please enter a Patient ID');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('loadingSection').style.display = 'block';
+            document.getElementById('patientCard').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                const patient = mockPatients[patientId];
+                
+                if (patient) {
+                    displayPatient(patientId, patient);
+                } else {
+                    showError();
+                }
+                
+                document.getElementById('loadingSection').style.display = 'none';
+            }, 1500);
+        }
+        
+        function displayPatient(id, patient) {
+            document.getElementById('patientId').textContent = id;
+            document.getElementById('patientName').textContent = patient.name;
+            document.getElementById('patientAge').textContent = patient.age + ' years';
+            document.getElementById('patientGender').textContent = patient.gender;
+            document.getElementById('scanType').textContent = patient.scan_type;
+            document.getElementById('lastVisit').textContent = patient.last_visit;
+            document.getElementById('medicalHistory').textContent = patient.medical_history;
+            document.getElementById('currentDiagnosis').textContent = patient.diagnosis;
+            
+            // Set avatar based on gender
+            const avatar = patient.gender === 'Male' ? '👨' : '👩';
+            document.getElementById('patientAvatar').textContent = avatar;
+            
+            document.getElementById('patientCard').style.display = 'block';
+        }
+        
+        function showError() {
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+        
+        // Allow Enter key to search
+        document.getElementById('patientIdInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchPatient();
+            }
+        });
+    </script>
+</body>
+</html>

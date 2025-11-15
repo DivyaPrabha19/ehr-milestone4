@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 AI Documentation - EHR Enhanced System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 50%, #f093fb 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+        
+        .input-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .input-section h3 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .input-section h3::before {
+            content: '📄 ';
+        }
+        
+        .text-input {
+            width: 100%;
+            min-height: 200px;
+            padding: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            resize: vertical;
+            font-family: 'Open Sans', sans-serif;
+        }
+        
+        .text-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .analyze-btn {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(118, 75, 162, 0.3);
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .analyze-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(118, 75, 162, 0.4);
+        }
+        
+        .results-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .results-section h3 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .results-section h3::before {
+            content: '🤖 ';
+        }
+        
+        .summary-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .summary-card h4 {
+            color: white;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .summary-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .medical-codes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .code-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .code-label {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .code-value {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.05rem;
+        }
+        
+        .confidence-score {
+            background: rgba(118, 75, 162, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 1px solid rgba(118, 75, 162, 0.3);
+        }
+        
+        .confidence-score h4 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .confidence-bar {
+            background: rgba(255, 255, 255, 0.3);
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            background: linear-gradient(135deg, #43cea2, #185a9d);
+            height: 100%;
+            border-radius: 6px;
+            transition: width 1s ease;
+        }
+        
+        .loading {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 50px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading h3 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .loading h3::before {
+            content: '🧠 ';
+        }
+        
+        .loading p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="index.html" style="float: left; color: white; text-decoration: none; font-size: 1.2rem;">← Back to Home</a>
+            <h1>📝 AI Documentation System</h1>
+            <p>Automated clinical documentation, medical coding, and EHR integration</p>
+        </div>
+        
+        <div class="input-section">
+            <h3>Input Medical Text</h3>
+            <textarea id="medicalText" class="text-input" placeholder="Enter medical notes, patient history, or clinical documentation here...
+
+Example:
+Patient presents with chest pain and shortness of breath. History of hypertension and diabetes mellitus type 2. Physical examination reveals elevated blood pressure 160/95 mmHg, heart rate 95 bpm. ECG shows ST elevation in leads II, III, aVF. Troponin levels elevated at 2.5 ng/mL. Diagnosed with acute myocardial infarction. Treatment initiated with aspirin, clopidogrel, and atorvastatin."></textarea>
+            <button class="analyze-btn" onclick="generateSummary()">🔍 Generate AI Summary</button>
+        </div>
+        
+        <div class="loading" id="loadingSection">
+            <div class="spinner"></div>
+            <h3>AI Processing Medical Text</h3>
+            <p>Analyzing with medical transformer models...</p>
+        </div>
+        
+        <div class="results-section" id="resultsSection">
+            <h3>AI Medical Summary & Coding</h3>
+            
+            <div class="summary-card">
+                <h4>📋 Clinical Summary</h4>
+                <div class="summary-text" id="summaryText">AI-generated summary will appear here</div>
+                
+                <div class="confidence-score">
+                    <h4>🎯 Analysis Confidence</h4>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="confidenceFill"></div>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.8); margin-top: 10px;">Confidence: <span id="confidenceText">0%</span></p>
+                </div>
+            </div>
+            
+            <div class="medical-codes" id="medicalCodes">
+                <div class="code-item">
+                    <div class="code-label">🏥 ICD-10 Code</div>
+                    <div class="code-value" id="icdCode">--</div>
+                </div>
+                <div class="code-item">
+                    <div class="code-label">💊 CPT Code</div>
+                    <div class="code-value" id="cptCode">--</div>
+                </div>
+                <div class="code-item">
+                    <div class="code-label">🩺 Primary Diagnosis</div>
+                    <div class="code-value" id="primaryDiagnosis">--</div>
+                </div>
+                <div class="code-item">
+                    <div class="code-label">⚕️ Specialty</div>
+                    <div class="code-value" id="specialty">--</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function generateSummary() {
+            const medicalText = document.getElementById('medicalText').value.trim();
+            
+            if (!medicalText) {
+                alert('Please enter medical text to analyze');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('loadingSection').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+            
+            try {
+                // Try to call backend API
+                const response = await fetch('http://localhost:8000/generate-summary', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text: medicalText })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    displayResults(result, medicalText);
+                } else {
+                    throw new Error('API call failed');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                // Show mock results for demo
+                setTimeout(() => {
+                    const mockResult = generateMockSummary(medicalText);
+                    displayResults(mockResult, medicalText);
+                }, 2000);
+            }
+        }
+        
+        function generateMockSummary(text) {
+            // Mock AI analysis based on keywords
+            const keywords = text.toLowerCase();
+            
+            let summary, icd, cpt, diagnosis, specialty, confidence;
+            
+            if (keywords.includes('chest pain') || keywords.includes('myocardial')) {
+                summary = "Patient presents with acute coronary syndrome. Clinical findings consistent with ST-elevation myocardial infarction (STEMI). Elevated cardiac biomarkers and ECG changes support diagnosis. Immediate cardiac intervention recommended.";
+                icd = "I21.9 - Acute myocardial infarction";
+                cpt = "93010 - Electrocardiogram";
+                diagnosis = "Acute Myocardial Infarction";
+                specialty = "Cardiology";
+                confidence = 94;
+            } else if (keywords.includes('diabetes') || keywords.includes('glucose')) {
+                summary = "Patient with diabetes mellitus type 2, requiring ongoing management. Blood glucose monitoring and medication adjustment indicated. Lifestyle modifications and dietary counseling recommended.";
+                icd = "E11.9 - Type 2 diabetes mellitus";
+                cpt = "99213 - Office visit";
+                diagnosis = "Diabetes Mellitus Type 2";
+                specialty = "Endocrinology";
+                confidence = 89;
+            } else if (keywords.includes('hypertension') || keywords.includes('blood pressure')) {
+                summary = "Patient presents with elevated blood pressure consistent with hypertension. Cardiovascular risk assessment indicated. Antihypertensive therapy and lifestyle modifications recommended.";
+                icd = "I10 - Essential hypertension";
+                cpt = "99214 - Office visit";
+                diagnosis = "Essential Hypertension";
+                specialty = "Internal Medicine";
+                confidence = 87;
+            } else {
+                summary = "Comprehensive medical evaluation completed. Clinical findings documented and appropriate diagnostic workup initiated. Follow-up care plan established based on patient presentation.";
+                icd = "Z00.00 - General medical examination";
+                cpt = "99213 - Office visit";
+                diagnosis = "General Medical Evaluation";
+                specialty = "Internal Medicine";
+                confidence = 82;
+            }
+            
+            return {
+                summary: summary,
+                medical_codes: {
+                    icd_10: icd,
+                    cpt: cpt,
+                    primary_diagnosis: diagnosis,
+                    specialty: specialty
+                },
+                confidence: confidence
+            };
+        }
+        
+        function displayResults(result, originalText) {
+            // Hide loading
+            document.getElementById('loadingSection').style.display = 'none';
+            
+            // Show results
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Update summary
+            document.getElementById('summaryText').textContent = result.summary || result.summary;
+            
+            // Update medical codes
+            if (result.medical_codes) {
+                document.getElementById('icdCode').textContent = result.medical_codes.icd_10;
+                document.getElementById('cptCode').textContent = result.medical_codes.cpt;
+                document.getElementById('primaryDiagnosis').textContent = result.medical_codes.primary_diagnosis;
+                document.getElementById('specialty').textContent = result.medical_codes.specialty;
+            }
+            
+            // Update confidence
+            const confidence = result.confidence || 85;
+            document.getElementById('confidenceText').textContent = `${confidence}%`;
+            
+            // Animate confidence bar
+            setTimeout(() => {
+                document.getElementById('confidenceFill').style.width = `${confidence}%`;
+            }, 500);
+        }
+    </script>
+</body>
+</html>

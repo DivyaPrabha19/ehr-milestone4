@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏥 EHR Imaging Analysis - AI Enhanced System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #ff6b9d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+        
+        .upload-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 50px;
+            text-align: center;
+            margin-bottom: 40px;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-section:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .upload-section.dragover {
+            border-color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+        }
+        
+        .upload-section h3 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .upload-section h3::before {
+            content: '📁 ';
+        }
+        
+        .upload-section p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .upload-btn {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.3);
+        }
+        
+        .upload-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(240, 147, 251, 0.4);
+        }
+        
+        .preview-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .preview-section h3 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .preview-section h3::before {
+            content: '📷 ';
+        }
+        
+        .image-preview {
+            max-width: 400px;
+            max-height: 300px;
+            border-radius: 10px;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .results-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .results-section h3 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .results-section h3::before {
+            content: '📊 ';
+        }
+        
+        .diagnosis-card {
+            background: linear-gradient(135deg, rgba(240, 147, 251, 0.3), rgba(245, 87, 108, 0.3));
+            backdrop-filter: blur(15px);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .confidence-bar {
+            background: rgba(255,255,255,0.3);
+            height: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            background: #28a745;
+            height: 100%;
+            border-radius: 5px;
+            transition: width 1s ease;
+        }
+        
+        .recommendations {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 20px;
+            margin-top: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .recommendations h4 {
+            color: white;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .recommendations h4::before {
+            content: '💡 ';
+        }
+        
+        .recommendations ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .recommendations li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.05rem;
+        }
+        
+        .recommendations li:before {
+            content: "✓ ";
+            color: #ff6b9d;
+            font-weight: bold;
+        }
+        
+        .loading {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 50px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .loading h3 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .loading h3::before {
+            content: '🤖 ';
+        }
+        
+        .loading p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .severity-high { border-left: 5px solid #dc3545; }
+        .severity-medium { border-left: 5px solid #ffc107; }
+        .severity-low { border-left: 5px solid #28a745; }
+        .severity-none { border-left: 5px solid #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="index.html" style="float: left; color: #667eea; text-decoration: none; font-size: 1.2rem;">← Back to Home</a>
+            <h1>🏥 EHR Imaging Analysis</h1>
+            <p>AI-enhanced medical imaging integrated with electronic health records</p>
+        </div>
+        
+        <div class="upload-section" id="uploadSection">
+            <h3>Upload Medical Image</h3>
+            <p>Drag and drop your image here or click to browse</p>
+            <input type="file" id="fileInput" class="file-input" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                Choose Image File
+            </button>
+        </div>
+        
+        <div class="preview-section" id="previewSection">
+            <h3>Image Preview</h3>
+            <img id="imagePreview" class="image-preview" alt="Medical Image Preview">
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="upload-btn" onclick="analyzeImage()">🔍 Analyze Image</button>
+            </div>
+        </div>
+        
+        <div class="loading" id="loadingSection">
+            <div class="spinner"></div>
+            <h3>AI Analysis in Progress...</h3>
+            <p>Processing your medical image with advanced AI algorithms</p>
+        </div>
+        
+        <div class="results-section" id="resultsSection">
+            <h3>Analysis Results</h3>
+            <div class="diagnosis-card" id="diagnosisCard">
+                <h4 id="diagnosisTitle">Diagnosis</h4>
+                <p id="diagnosisDescription">Description will appear here</p>
+                <div class="confidence-bar">
+                    <div class="confidence-fill" id="confidenceFill"></div>
+                </div>
+                <p>Confidence: <span id="confidenceText">0%</span></p>
+            </div>
+            
+            <div class="recommendations" id="recommendationsSection">
+                <h4>Medical Recommendations</h4>
+                <ul id="recommendationsList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+        
+        // File input handling
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                selectedFile = file;
+                previewImage(file);
+            }
+        });
+        
+        // Drag and drop handling
+        const uploadSection = document.getElementById('uploadSection');
+        
+        uploadSection.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadSection.classList.add('dragover');
+        });
+        
+        uploadSection.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadSection.classList.remove('dragover');
+        });
+        
+        uploadSection.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadSection.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                selectedFile = files[0];
+                previewImage(files[0]);
+            }
+        });
+        
+        function previewImage(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imagePreview').src = e.target.result;
+                document.getElementById('previewSection').style.display = 'block';
+                document.getElementById('resultsSection').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        async function analyzeImage() {
+            if (!selectedFile) {
+                alert('Please select an image first');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('loadingSection').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+            
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            
+            try {
+                const response = await fetch('http://localhost:8000/analyze-image', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Analysis failed');
+                }
+                
+                const result = await response.json();
+                displayResults(result.analysis);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                // Show mock results for demo
+                setTimeout(() => {
+                    const mockResult = generateMockResult();
+                    displayResults(mockResult);
+                }, 2000);
+            }
+        }
+        
+        function generateMockResult() {
+            const diagnoses = [
+                {
+                    scan_type: 'MRI',
+                    diagnosis: 'Normal Brain Scan',
+                    confidence: 94,
+                    severity: 'None',
+                    description: 'No abnormalities detected in brain tissue',
+                    recommendations: [
+                        'Continue regular health monitoring',
+                        'Maintain healthy lifestyle',
+                        'Schedule routine follow-up as needed'
+                    ]
+                },
+                {
+                    scan_type: 'CT',
+                    diagnosis: 'Possible Fracture',
+                    confidence: 87,
+                    severity: 'Medium',
+                    description: 'Potential bone fracture detected',
+                    recommendations: [
+                        'Immediate orthopedic consultation',
+                        'Immobilization of affected area',
+                        'Follow-up X-ray in 2 weeks'
+                    ]
+                }
+            ];
+            
+            return diagnoses[Math.floor(Math.random() * diagnoses.length)];
+        }
+        
+        function displayResults(analysis) {
+            // Hide loading
+            document.getElementById('loadingSection').style.display = 'none';
+            
+            // Show results
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Update diagnosis card
+            const diagnosisCard = document.getElementById('diagnosisCard');
+            diagnosisCard.className = `diagnosis-card severity-${analysis.severity.toLowerCase()}`;
+            
+            document.getElementById('diagnosisTitle').textContent = 
+                `${analysis.scan_type || 'Medical'} Analysis: ${analysis.diagnosis}`;
+            document.getElementById('diagnosisDescription').textContent = analysis.description;
+            document.getElementById('confidenceText').textContent = `${analysis.confidence}%`;
+            
+            // Animate confidence bar
+            setTimeout(() => {
+                document.getElementById('confidenceFill').style.width = `${analysis.confidence}%`;
+            }, 500);
+            
+            // Update recommendations
+            const recommendationsList = document.getElementById('recommendationsList');
+            recommendationsList.innerHTML = '';
+            
+            analysis.recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                recommendationsList.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
